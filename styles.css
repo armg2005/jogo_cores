@@ -24,3 +24,15 @@ h1 {
   width: 100%;
   border-radius: 100%;
 }
+#botao_jogar {
+  margin: 5vh;
+  background-color: #000000; /* Azul */
+  color: white;              /* Texto branco */
+  border: none;              /* Sem borda */
+  padding: 10px 20px;        /* Espaçamento interno */
+  font-size: 16px;           /* Tamanho da fonte */
+  border-radius: 5px;        /* Cantos arredondados */
+  cursor: pointer;           /* Cursor de mãozinha */
+  transition: background-color 0.3s;
+}
+
