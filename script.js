@@ -19,39 +19,86 @@ function embaralhar(array) {
   
   return copia;
 }
-
-function atualizar(coresSelecionadas, corAlvo, cores) {
-  for (let i = 0; i < 9; i++) {
-    let div = document.getElementById("div" + (i + 1));
-    div.style.backgroundColor = coresSelecionadas[i];
-
-    const novasCores = pegar9Embaralhados(cores);
-    const novaCorAlvo = sortearNovaCorAlvo(novasCores);
-    div.onclick = function() {
-      const corClicada = div.style.backgroundColor;
-      if (corClicada === corAlvo) {
-        alert("Parabéns, você acertou!");
-        atualizar(novasCores, novaCorAlvo,cores);
-      } else {
-        alert("Errou, tente novamente.");
-        atualizar(novasCores, novaCorAlvo, cores);
-      }
-
-    };
-  }
-}
-
 document.addEventListener("DOMContentLoaded", function() {
 
+  function atualizar(coresSelecionadas, corAlvo) {
+    for (let i = 0; i < 9; i++) {
+      let div = document.getElementById("div" + (i + 1));
+      div.style.backgroundColor = coresSelecionadas[i];
+
+      div.onclick = function() {
+        const corClicada = div.style.backgroundColor;
+
+        if (corClicada === corAlvo) {
+          resultado.textContent = "Acertou!";
+          jogador.pontuacao += 20;
+        } else {
+          resultado.textContent = "Errou!";
+          jogador.pontuacao -= 10;
+        }
+        pontosDisplay.textContent = "Pontuação: " + jogador.pontuacao;
+
+        const novasCores = pegar9Embaralhados(cores);
+        const novaCorAlvo = sortearNovaCorAlvo(novasCores);
+        
+        
+        atualizar(novasCores, novaCorAlvo);
+    };
+    }
+  }
+
+  
   let cores = ["blue", "red", "green", "black", "orange", "yellow", "orange", "purple", "pink", "brown", "gray", "cyan"];
   const botao_jogar = document.getElementById("botao_jogar");
   let pontuacao = 0;
   const temporizador = document.getElementById("temporizador");
   let intervalo;
+  const rankingList = document.getElementById("rankingList");
+  let jogador = { nome: "Jogador", pontuacao: 0 };
+  const resultado = document.getElementById("resultado");
+  const pontosDisplay = document.getElementById("pontos");
+
+  function exibirRanking() {
+    const ranking = JSON.parse(localStorage.getItem('gameRanking')) || [];
+    rankingList.innerHTML = '';
+    ranking.forEach(jogador => {
+      const li = document.createElement('li');
+      li.textContent = `${jogador.nome} - ${jogador.pontuacao} pontos`;
+      rankingList.appendChild(li);
+    });
+  }
+
+  function salvarPontuacao() {
+    const nomeJogador = prompt("Tempo esgotado! Digite seu nome para salvar no ranking:", "Jogador");
+    if (nomeJogador) { // Verifica se o jogador não cancelou o prompt
+      jogador.nome = nomeJogador;
+    } else {
+      jogador.nome = "Anônimo";
+    }
+    const ranking = JSON.parse(localStorage.getItem('gameRanking')) || [];
+
+    ranking.push({ nome: jogador.nome, pontuacao: jogador.pontuacao });
+
+    ranking.sort((a, b) => b.pontuacao - a.pontuacao);
+
+    const top10 = ranking.slice(0, 10);
+
+    localStorage.setItem('gameRanking', JSON.stringify(top10));
+
+    exibirRanking();
+  }
 
   botao_jogar.onclick =function(){
 
+    jogador.pontuacao = 0;
+    pontosDisplay.textContent = "Pontuação: 0";
+    resultado.textContent = "";
+
     let tempo = 40;
+    jogador.pontuacao = 0;
+    pontosDisplay.textContent = "Pontuação: 0";
+    resultado.textContent = "Boa sorte!";
+
     temporizador.textContent = tempo;
     clearInterval(intervalo);
 
@@ -61,13 +108,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
       if (tempo <= 0) {
         clearInterval(intervalo);
-        alert(" Tempo esgotado!");
+        temporizador.textContent = "Tempo Esgotado!";
+        salvarPontuacao();
       }
     }, 1000);
     let coresSelecionadas = pegar9Embaralhados(cores);  
     let corAlvo =sortearNovaCorAlvo(coresSelecionadas);
-    atualizar(coresSelecionadas ,corAlvo, cores)
+    atualizar(coresSelecionadas, corAlvo, cores, resultado, pontosDisplay)
  
   };
+  exibirRanking();
 });
   
