@@ -21,7 +21,7 @@ function embaralhar(array) {
 }
 document.addEventListener("DOMContentLoaded", function() {
 
-  function atualizar(coresSelecionadas, corAlvo) {
+  function atualizar(coresSelecionadas, corAlvo, cores) {
     for (let i = 0; i < 9; i++) {
       let div = document.getElementById("div" + (i + 1));
       div.style.backgroundColor = coresSelecionadas[i];
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const novaCorAlvo = sortearNovaCorAlvo(novasCores);
         
         
-        atualizar(novasCores, novaCorAlvo);
+        atualizar(novasCores, novaCorAlvo,cores);
     };
     }
   }
@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }, 1000);
     let coresSelecionadas = pegar9Embaralhados(cores);  
     let corAlvo =sortearNovaCorAlvo(coresSelecionadas);
-    atualizar(coresSelecionadas, corAlvo, cores, resultado, pontosDisplay)
+    atualizar(coresSelecionadas, corAlvo, cores)
  
   };
   exibirRanking();
