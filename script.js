@@ -110,6 +110,8 @@ document.addEventListener("DOMContentLoaded", function() {
         clearInterval(intervalo);
         temporizador.textContent = "Tempo Esgotado!";
         salvarPontuacao();
+        alert("O jogo será reiniciado!"); // Opcional: um alerta para avisar o usuário
+        location.reload();
       }
     }, 1000);
     let coresSelecionadas = pegar9Embaralhados(cores);  
